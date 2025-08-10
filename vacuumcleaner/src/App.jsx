@@ -54,7 +54,8 @@ export default function App() {
           )
   );
 
-  const [paintMode, setPaintMode] = useState(null);
+  const [paintMode, setPaintMode] = useState("start");
+  const [selectedObstacle, setSelectedObstacle] = useState("bed");
   const [startPos, setStartPos] = useState(null);
   const [vacuumPos, setVacuumPos] = useState([0, 0.25, 0]);
   const [vacuumTarget, setVacuumTarget] = useState([0, 0.25, 0]);
@@ -64,34 +65,36 @@ export default function App() {
 
   // Handle clicks from Grid: (x = col, y = row)
   const handleCellClick = (x, y) => {
-    if (!paintMode) return;
-
-    setGrid((prev) => {
-      const newGrid = prev.map((row) => row.map((cell) => ({ ...cell })));
+    setGrid(prevGrid => {
+      let newGrid = prevGrid.map(row => row.map(cell => ({ ...cell })));
 
       if (paintMode === "start") {
-        for (let row = 0; row < GRID_SIZE; row++) {
-          for (let col = 0; col < GRID_SIZE; col++) {
-            if (newGrid[row][col].type === "start")
-              newGrid[row][col].type = "empty";
-          }
-        }
-        newGrid[y][x].type = "start";
+        // Remove previous start tile if exists
+        newGrid = newGrid.map(row =>
+            row.map(cell => (cell.type === "start" ? { type: "empty" } : cell))
+        );
+
+        // Set new start position tile
+        newGrid[y][x] = { type: "start" };
         setStartPos([x, y]);
+
+        // Move vacuum to start position immediately
         setVacuumPos([x * TILE_SIZE, 0.25, y * TILE_SIZE]);
-        setVacuumTarget([x * TILE_SIZE, 0.25, y * TILE_SIZE]);
-      } else {
-        // Toggle dirt/obstacle on click
-        if (newGrid[y][x].type === paintMode) {
-          newGrid[y][x].type = "empty";
-        } else {
-          newGrid[y][x].type = paintMode;
-        }
+
+      } else if (paintMode === "dirt") {
+        newGrid[y][x] = { type: "dirt" };
+      } else if (paintMode === "obstacle") {
+        newGrid[y][x] = { type: "obstacle", obstacleType: selectedObstacle };
+      } else if (paintMode === "empty") {
+        newGrid[y][x] = { type: "empty" };
       }
 
       return newGrid;
     });
   };
+
+
+
 
   const clearObstacles = () => {
     setGrid((prev) =>
@@ -194,6 +197,8 @@ export default function App() {
         <Controls
             paintMode={paintMode}
             setPaintMode={setPaintMode}
+            selectedObstacle={selectedObstacle}
+            setSelectedObstacle={setSelectedObstacle}
             clearObstacles={clearObstacles}
             startCleaning={startCleaning}
         />
