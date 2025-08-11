@@ -1,70 +1,92 @@
-# Getting Started with Create React App
+# 🧹 Vacuum Cleaner Path Planning (3D)
 
-This project was bootstrapped with [Create React App](https://github.com/facebook/create-react-app).
+A visually stunning **3D interactive simulation** of a vacuum cleaner navigating a room, avoiding obstacles, and cleaning dirt — built with **React**, **Three.js**, and **React Three Fiber**.
 
-## Available Scripts
+This project allows you to **set start points, place dirt, add various obstacles (TV, Bed, Couch, Wardrobe, Tables & Chairs)**, and watch the vacuum cleaner autonomously navigate the space.
 
-In the project directory, you can run:
+---
 
-### `npm start`
+## ✨ Features
 
-Runs the app in the development mode.\
-Open [http://localhost:3000](http://localhost:3000) to view it in your browser.
+- 🚀 **Real-time 3D Simulation** using Three.js + React Three Fiber
+- 🎨 **Animated gradient background** with glassmorphism UI
+- 🛋 **Place obstacles** (TV, Bed, Couch, Wardrobe, Tables & Chairs)
+- 🗑 **Clear all obstacles** with one click
+- 🧠 **Pathfinding logic** for optimal cleaning
+- 🖱 **Interactive controls** with smooth animations
+- 🌟 **Stylish custom dropdowns** and glowing neon buttons
 
-The page will reload when you make changes.\
-You may also see any lint errors in the console.
+---
 
-### `npm test`
+## 🖼 Demo
 
-Launches the test runner in the interactive watch mode.\
-See the section about [running tests](https://facebook.github.io/create-react-app/docs/running-tests) for more information.
+*(Add a GIF or screenshot of your project here)*
 
-### `npm run build`
+---
 
-Builds the app for production to the `build` folder.\
-It correctly bundles React in production mode and optimizes the build for the best performance.
+## 📦 Tech Stack
 
-The build is minified and the filenames include the hashes.\
-Your app is ready to be deployed!
+- **React** – Frontend UI
+- **Three.js** + **React Three Fiber** – 3D rendering
+- **JavaScript (ES6+)**
+- **CSS3** – Glassmorphism, neon effects, animations
 
-See the section about [deployment](https://facebook.github.io/create-react-app/docs/deployment) for more information.
+---
 
-### `npm run eject`
+## 📂 Folder Structure
 
-**Note: this is a one-way operation. Once you `eject`, you can't go back!**
+vacuum-cleaner/
+│
+├── public/ # Public assets (models, textures, favicon, etc.)
+│ ├── models/ # 3D OBJ & MTL files for obstacles
+│ └── index.html
+│
+├── src/
+│ ├── components/
+│ │ ├── Controls.jsx # UI control panel
+│ │ ├── Vacuum.jsx # Vacuum cleaner 3D model
+│ │ ├── Room.jsx # Room environment
+│ │ ├── Obstacles/ # Individual obstacle components
+│ │
+│ ├── App.jsx # Main app
+│ ├── App.css # Styling
+│ ├── index.js # Entry point
+│
+└── package.json
 
-If you aren't satisfied with the build tool and configuration choices, you can `eject` at any time. This command will remove the single build dependency from your project.
 
-Instead, it will copy all the configuration files and the transitive dependencies (webpack, Babel, ESLint, etc) right into your project so you have full control over them. All of the commands except `eject` will still work, but they will point to the copied scripts so you can tweak them. At this point you're on your own.
+---
 
-You don't have to ever use `eject`. The curated feature set is suitable for small and middle deployments, and you shouldn't feel obligated to use this feature. However we understand that this tool wouldn't be useful if you couldn't customize it when you are ready for it.
+## ⚙️ Installation & Setup
 
-## Learn More
+1️⃣ **Clone the repository**
+git clone https://github.com/yourusername/vacuum-cleaner.git
+cd vacuum-cleaner
 
-You can learn more in the [Create React App documentation](https://facebook.github.io/create-react-app/docs/getting-started).
+2️⃣ Install dependencies
+npm install
 
-To learn React, check out the [React documentation](https://reactjs.org/).
+3️⃣ Start the development server
+npm start
 
-### Code Splitting
+http://localhost:3000
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/code-splitting](https://facebook.github.io/create-react-app/docs/code-splitting)
+🎮 How to Use
+Set Start – Choose where the vacuum begins.
 
-### Analyzing the Bundle Size
+Add Dirt – Place dirt tiles to be cleaned.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size](https://facebook.github.io/create-react-app/docs/analyzing-the-bundle-size)
+Add Obstacle – Select from the dropdown to place items like TV, Bed, etc.
 
-### Making a Progressive Web App
+Clear Obstacles – Remove all placed objects.
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app](https://facebook.github.io/create-react-app/docs/making-a-progressive-web-app)
+Start Cleaning – Watch the vacuum clean autonomously.
 
-### Advanced Configuration
+🚀 Future Improvements
+✅ More furniture options
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/advanced-configuration](https://facebook.github.io/create-react-app/docs/advanced-configuration)
+✅ Improved pathfinding with AI
 
-### Deployment
+✅ Save & load room layouts
 
-This section has moved here: [https://facebook.github.io/create-react-app/docs/deployment](https://facebook.github.io/create-react-app/docs/deployment)
-
-### `npm run build` fails to minify
-
-This section has moved here: [https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify](https://facebook.github.io/create-react-app/docs/troubleshooting#npm-run-build-fails-to-minify)
+✅ Mobile-friendly touch controls
