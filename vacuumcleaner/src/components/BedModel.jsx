@@ -1,32 +1,34 @@
 import React, { useRef, useEffect } from "react";
 import { useFrame } from "@react-three/fiber";
-import * as THREE from "three";
 import { useOBJLoader } from "../hooks/useOBJLoader";
+import * as THREE from "three";
 
 export default function BedModel(props) {
     const obj = useOBJLoader("/models/bed.obj", "/models/bed.mtl");
     const ref = useRef();
 
-    // Base rotations for X, Y, Z
-    const baseRotation = { x: Math.PI/2, y: Math.PI, z: 0 };
-
     useEffect(() => {
-        if (ref.current) {
-            ref.current.rotation.set(baseRotation.x, baseRotation.y, baseRotation.z);
+        if (ref.current && obj) {
+            // Initial rotation to face the right way
+            ref.current.rotation.set(Math.PI/2, Math.PI, 0);
             ref.current.updateMatrixWorld(true);
 
+            // Lift so the bed sits on the tile instead of intersecting it
             const box = new THREE.Box3().setFromObject(ref.current);
             const heightOffset = -box.min.y;
             ref.current.position.y = heightOffset + 0.1;
         }
     }, [obj]);
 
+    // Optional continuous rotation (can be disabled)
+
+
     return obj ? (
         <primitive
             object={obj}
             ref={ref}
-            scale={[0.006, 0.007, 0.008]}
-            {...props}
+            scale={[0.0075, 0.0075, 0.0075]} // small enough for tile
+            {...props} // pass position={[x, y, z]} from tile selection
         />
     ) : null;
 }

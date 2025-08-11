@@ -1,7 +1,6 @@
 import React, { useState, useEffect } from "react";
 import { Canvas } from "@react-three/fiber";
 import { OrbitControls } from "@react-three/drei";
-import * as THREE from "three";
 import Grid from "./components/Grid";
 import Vacuum from "./components/Vacuum";
 import Controls from "./components/Controls";

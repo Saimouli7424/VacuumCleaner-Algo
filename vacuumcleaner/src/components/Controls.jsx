@@ -39,6 +39,7 @@ export default function Controls({
                     <option value="bed">Bed</option>
                     <option value="couch">Couch</option>
                     <option value="wardrobe">Wardrobe</option>
+                    <option value="tableschairs">Tables & Chairs</option>
                 </select>
             )}
 

@@ -3,6 +3,8 @@ import * as THREE from "three";
 import BedModel from "./BedModel";
 import CouchModel from "./CouchModel";
 import WardrobeModel from "./WardrobeModel";
+import TVModel from "./TVModel";
+import TablesAndChairsModel from "./TablesAndChairsModel";
 
 const TILE_SIZE = 1.5;
 
@@ -10,10 +12,14 @@ function ObstacleModel({ type, position }) {
     switch (type) {
         case "bed":
             return <BedModel position={position} />;
+        case "tv":
+            return <TVModel position={position} />;
         case "couch":
             return <CouchModel position={position} />;
         case "wardrobe":
           return <WardrobeModel position={position} />;
+        case "tableschairs":
+            return <TablesAndChairsModel position={position} />;
         default:
             return null;
     }
