@@ -1,30 +1,23 @@
-/* App.css */
-
-/* Global background with smooth animated gradient */
-body,
-html,
-#root {
-  margin: 0;
-  padding: 0;
-  height: 100%;
-  width: 100%;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  background: linear-gradient(135deg, #0f2027, #203a43, #2c5364);
-  background-size: 400% 400%;
-  animation: gradientShift 15s ease infinite;
-  overflow: hidden;
+/* Hamburger Button - hidden on desktop */
+.hamburger {
+  display: none;
+  position: fixed;
+  top: 15px;
+  left: 15px;
+  z-index: 1100;
+  background: transparent;
+  border: none;
+  font-size: 2rem;
+  color: #00fff7;
+  cursor: pointer;
   user-select: none;
-  color: #e0e0e0;
+  transition: color 0.3s ease;
+}
+.hamburger:hover {
+  color: #0080ff;
 }
 
-/* Smooth animated background */
-@keyframes gradientShift {
-  0% { background-position: 0% 50%; }
-  50% { background-position: 100% 50%; }
-  100% { background-position: 0% 50%; }
-}
-
-/* Control Panel container - glassmorphism effect */
+/* Control Panel default (desktop) */
 .control-panel {
   position: fixed;
   left: 20px;
@@ -41,11 +34,66 @@ html,
   border: 1px solid rgba(255, 255, 255, 0.12);
   width: 200px;
   z-index: 1000;
-  transition: transform 0.4s ease;
+  transition: transform 0.4s ease, opacity 0.3s ease;
 }
 
 .control-panel:hover {
   transform: translateY(-50%) scale(1.03);
+}
+
+/* Mobile Styles */
+@media (max-width: 768px) {
+  .hamburger {
+    display: block;
+  }
+
+  .control-panel {
+    position: fixed;
+    top: 60px; /* below hamburger */
+    left: 0;
+    width: 50%; /* half screen */
+    max-width: 250px;
+    height: calc(100% - 60px); /* full height minus hamburger */
+    padding: 15px 20px;
+    border-radius: 0 12px 12px 0; /* rounded right corners */
+    background: rgba(255, 255, 255, 0.12);
+    box-shadow: 2px 0 15px rgba(0, 255, 255, 0.3);
+    opacity: 0;
+    pointer-events: none;
+    user-select: none;
+    max-height: none;
+    overflow-y: auto;
+    transform: translateX(-100%); /* hidden offscreen to left */
+    transition: transform 0.3s ease, opacity 0.3s ease;
+    z-index: 1050;
+  }
+
+  /* Show panel when open */
+  .control-panel.open {
+    opacity: 1;
+    pointer-events: auto;
+    user-select: auto;
+    transform: translateX(0); /* slide in */
+  }
+
+  /* Smaller buttons on mobile */
+  .control-panel button {
+    padding: 8px 10px;
+    font-size: 0.9rem;
+    border-radius: 8px;
+  }
+
+  /* Buttons and select full width */
+  .control-panel button,
+  .obstacle-dropdown select {
+    width: 100%;
+  }
+
+  /* Dropdown container full width */
+  .obstacle-dropdown {
+    width: 100%;
+    margin-top: 5px;
+  }
 }
 
 /* Buttons - modern neon look */
@@ -85,16 +133,11 @@ html,
   transform: scale(1.12);
 }
 
-/* Canvas styling */
-canvas {
-  display: block;
-  background: radial-gradient(circle at center, #0b0b0b, #000);
-}
-
 /* Dropdown container */
 .obstacle-dropdown {
   position: relative;
-  width: 100%;
+  width: 200px;
+  margin-top: 5px;
 }
 
 /* Custom select styling */
@@ -106,7 +149,7 @@ canvas {
   padding: 12px 15px;
   font-size: 1rem;
   font-weight: 600;
-  color: #fff;
+  color: #222; /* dark text for readability */
   background: linear-gradient(135deg, rgba(0, 255, 200, 0.15), rgba(0, 180, 255, 0.2));
   border: 2px solid rgba(0, 255, 247, 0.5);
   border-radius: 12px;
@@ -126,7 +169,7 @@ canvas {
   transform: scale(1.05);
 }
 
-/* Add a custom dropdown arrow */
+/* Dropdown arrow */
 .obstacle-dropdown::after {
   content: "▼";
   position: absolute;
@@ -139,18 +182,30 @@ canvas {
   transition: transform 0.3s ease;
 }
 
+/* Flip arrow on focus */
 .obstacle-dropdown select:focus + .obstacle-dropdown::after {
   transform: translateY(-50%) rotate(180deg);
 }
 
-/* Responsive tweaks */
-@media (max-width: 768px) {
-  .control-panel {
-    width: 160px;
-    padding: 16px 20px;
-  }
-  .control-panel button {
-    font-size: 0.85rem;
-    padding: 10px 0;
-  }
+body,
+html,
+#root {
+  margin: 0;
+  padding: 0;
+  height: 100%;
+  width: 100%;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  background: linear-gradient(135deg, #1a1a2e, #16213e, #0f3460);
+  background-size: 400% 400%;
+  animation: gradientShift 20s ease infinite;
+  overflow: hidden;
+  user-select: none;
+  color: #e0e0e0;
+}
+
+/* Smooth animated background */
+@keyframes gradientShift {
+  0% { background-position: 0% 50%; }
+  50% { background-position: 100% 50%; }
+  100% { background-position: 0% 50%; }
 }

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useState } from "react";
 
 export default function Controls({
                                      paintMode,
@@ -8,43 +8,57 @@ export default function Controls({
                                      clearObstacles,
                                      startCleaning,
                                  }) {
+    const [open, setOpen] = useState(false);
+
+    const toggleOpen = () => setOpen((o) => !o);
+
     return (
-        <div className="control-panel">
-            <button
-                onClick={() => setPaintMode("start")}
-                className={paintMode === "start" ? "active" : ""}
-            >
-                Set Start
-            </button>
-            <button
-                onClick={() => setPaintMode("dirt")}
-                className={paintMode === "dirt" ? "active" : ""}
-            >
-                Add Dirt
+        <>
+            {/* Hamburger visible only on mobile */}
+            <button className="hamburger" onClick={toggleOpen} aria-label="Toggle controls">
+                ☰
             </button>
 
-            <button
-                onClick={() => setPaintMode("obstacle")}
-                className={paintMode === "obstacle" ? "active" : ""}
-            >
-                Add Obstacle
-            </button>
-
-            {paintMode === "obstacle" && (
-                <select
-                    value={selectedObstacle}
-                    onChange={(e) => setSelectedObstacle(e.target.value)}
+            {/* Controls panel: add 'open' class when open */}
+            <div className={`control-panel ${open ? "open" : ""}`}>
+                <button
+                    onClick={() => setPaintMode("start")}
+                    className={paintMode === "start" ? "active" : ""}
                 >
-                    <option value="tv">TV</option>
-                    <option value="bed">Bed</option>
-                    <option value="couch">Couch</option>
-                    <option value="wardrobe">Wardrobe</option>
-                    <option value="tableschairs">Tables & Chairs</option>
-                </select>
-            )}
+                    Set Start
+                </button>
+                <button
+                    onClick={() => setPaintMode("dirt")}
+                    className={paintMode === "dirt" ? "active" : ""}
+                >
+                    Add Dirt
+                </button>
 
-            <button onClick={clearObstacles}>Clear Obstacles</button>
-            <button onClick={startCleaning}>Start Cleaning</button>
-        </div>
+                <button
+                    onClick={() => setPaintMode("obstacle")}
+                    className={paintMode === "obstacle" ? "active" : ""}
+                >
+                    Add Obstacle
+                </button>
+
+                {paintMode === "obstacle" && (
+                    <div className="obstacle-dropdown">
+                        <select
+                            value={selectedObstacle}
+                            onChange={(e) => setSelectedObstacle(e.target.value)}
+                        >
+                            <option value="tv">TV</option>
+                            <option value="bed">Bed</option>
+                            <option value="couch">Couch</option>
+                            <option value="wardrobe">Wardrobe</option>
+                            <option value="tableschairs">Tables & Chairs</option>
+                        </select>
+                    </div>
+                )}
+
+                <button onClick={clearObstacles}>Clear Obstacles</button>
+                <button onClick={startCleaning}>Start Cleaning</button>
+            </div>
+        </>
     );
 }
