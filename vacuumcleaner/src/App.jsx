@@ -10,20 +10,101 @@ import "./App.css";
 const TILE_SIZE = 1.5;
 const GRID_SIZE = 10;
 
-function bfs(start, target, grid) {
+// Simple priority queue implementation using a binary heap
+class MinPriorityQueue {
+  constructor() {
+    this.heap = [];
+  }
+  enqueue(element, priority) {
+    this.heap.push({ element, priority });
+    this.bubbleUp();
+  }
+  bubbleUp() {
+    let idx = this.heap.length - 1;
+    const element = this.heap[idx];
+    while (idx > 0) {
+      let parentIdx = Math.floor((idx - 1) / 2);
+      let parent = this.heap[parentIdx];
+      if (element.priority >= parent.priority) break;
+      this.heap[idx] = parent;
+      this.heap[parentIdx] = element;
+      idx = parentIdx;
+    }
+  }
+  dequeue() {
+    const min = this.heap[0];
+    const end = this.heap.pop();
+    if (this.heap.length > 0) {
+      this.heap[0] = end;
+      this.sinkDown(0);
+    }
+    return min;
+  }
+  sinkDown(idx) {
+    const length = this.heap.length;
+    const element = this.heap[idx];
+    while (true) {
+      let leftChildIdx = 2 * idx + 1;
+      let rightChildIdx = 2 * idx + 2;
+      let swap = null;
+      if (leftChildIdx < length) {
+        if (this.heap[leftChildIdx].priority < element.priority) {
+          swap = leftChildIdx;
+        }
+      }
+      if (rightChildIdx < length) {
+        if (
+            (swap === null && this.heap[rightChildIdx].priority < element.priority) ||
+            (swap !== null && this.heap[rightChildIdx].priority < this.heap[leftChildIdx].priority)
+        ) {
+          swap = rightChildIdx;
+        }
+      }
+      if (swap === null) break;
+      this.heap[idx] = this.heap[swap];
+      this.heap[swap] = element;
+      idx = swap;
+    }
+  }
+  isEmpty() {
+    return this.heap.length === 0;
+  }
+}
+
+// Dijkstra algorithm for grid pathfinding
+function dijkstra(start, target, grid) {
   const [sx, sy] = start;
   const [tx, ty] = target;
-  const visited = new Set();
-  const queue = [[sx, sy, []]];
+  const dist = Array(GRID_SIZE)
+      .fill(null)
+      .map(() => Array(GRID_SIZE).fill(Infinity));
+  dist[sy][sx] = 0;
+
+  const prev = Array(GRID_SIZE)
+      .fill(null)
+      .map(() => Array(GRID_SIZE).fill(null));
+
+  const pq = new MinPriorityQueue();
+  pq.enqueue([sx, sy], 0);
+
   const inBounds = (x, y) => x >= 0 && y >= 0 && x < GRID_SIZE && y < GRID_SIZE;
 
-  while (queue.length) {
-    const [x, y, path] = queue.shift();
-    if (x === tx && y === ty) return [...path, [x, y]];
+  while (!pq.isEmpty()) {
+    const { element: [x, y] } = pq.dequeue();
 
-    const key = `${x},${y}`;
-    if (visited.has(key)) continue;
-    visited.add(key);
+    if (x === tx && y === ty) {
+      // Reconstruct path from target to start
+      const path = [];
+      let cx = x,
+          cy = y;
+      while (cx !== null && cy !== null) {
+        path.unshift([cx, cy]);
+        const p = prev[cy][cx];
+        if (!p) break;
+        [cx, cy] = p;
+      }
+      return path;
+    }
 
     for (const [nx, ny] of [
       [x + 1, y],
@@ -31,16 +112,17 @@ function bfs(start, target, grid) {
       [x, y + 1],
       [x, y - 1],
     ]) {
-      if (
-          inBounds(nx, ny) &&
-          !visited.has(`${nx},${ny}`) &&
-          grid[ny][nx].type !== "obstacle"
-      ) {
-        queue.push([nx, ny, [...path, [x, y]]]);
+      if (inBounds(nx, ny) && grid[ny][nx].type !== "obstacle") {
+        const cost = dist[y][x] + 1; // uniform cost; update if variable cost needed
+        if (cost < dist[ny][nx]) {
+          dist[ny][nx] = cost;
+          prev[ny][nx] = [x, y];
+          pq.enqueue([nx, ny], cost);
+        }
       }
     }
   }
-  return null;
+  return null; // no path found
 }
 
 export default function App() {
@@ -63,24 +145,17 @@ export default function App() {
   const [vacuumIndex, setVacuumIndex] = useState(0);
   const [isCleaning, setIsCleaning] = useState(false);
 
-  // Handle clicks from Grid: (x = col, y = row)
   const handleCellClick = (x, y) => {
-    setGrid(prevGrid => {
-      let newGrid = prevGrid.map(row => row.map(cell => ({ ...cell })));
+    setGrid((prevGrid) => {
+      let newGrid = prevGrid.map((row) => row.map((cell) => ({ ...cell })));
 
       if (paintMode === "start") {
-        // Remove previous start tile if exists
-        newGrid = newGrid.map(row =>
-            row.map(cell => (cell.type === "start" ? { type: "empty" } : cell))
+        newGrid = newGrid.map((row) =>
+            row.map((cell) => (cell.type === "start" ? { type: "empty" } : cell))
         );
-
-        // Set new start position tile
         newGrid[y][x] = { type: "start" };
         setStartPos([x, y]);
-
-        // Move vacuum to start position immediately
         setVacuumPos([x * TILE_SIZE, 0.25, y * TILE_SIZE]);
-
       } else if (paintMode === "dirt") {
         newGrid[y][x] = { type: "dirt" };
       } else if (paintMode === "obstacle") {
@@ -92,9 +167,6 @@ export default function App() {
       return newGrid;
     });
   };
-
-
-
 
   const clearObstacles = () => {
     setGrid((prev) =>
@@ -126,11 +198,9 @@ export default function App() {
     let current = startPos;
 
     for (const target of dirtTiles) {
-      const segment = bfs(current, target, grid);
+      const segment = dijkstra(current, target, grid);
       if (!segment) {
-        alert(
-            `No path to dirt at (${target[0]}, ${target[1]}). Please check obstacles.`
-        );
+        alert(`No path to dirt at (${target[0]}, ${target[1]}). Please check obstacles.`);
         setIsCleaning(false);
         return;
       }
@@ -138,7 +208,7 @@ export default function App() {
       current = target;
     }
 
-    const returnSegment = bfs(current, startPos, grid);
+    const returnSegment = dijkstra(current, startPos, grid);
     if (!returnSegment) {
       alert("No path to return to start!");
       setIsCleaning(false);
@@ -202,10 +272,7 @@ export default function App() {
             clearObstacles={clearObstacles}
             startCleaning={startCleaning}
         />
-        <Canvas
-            style={{ height: "100vh", width: "100vw" }}
-            camera={{ position: [15, 25, 15], fov: 50 }}
-        >
+        <Canvas style={{ height: "100vh", width: "100vw" }} camera={{ position: [15, 25, 15], fov: 50 }}>
           <ambientLight intensity={0.5} />
           <pointLight position={[10, 20, 10]} />
           <OrbitControls />

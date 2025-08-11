@@ -1,7 +1,8 @@
 import React from "react";
 import * as THREE from "three";
 import BedModel from "./BedModel";
-// import WardrobeModel if you have it
+import CouchModel from "./CouchModel";
+import WardrobeModel from "./WardrobeModel";
 
 const TILE_SIZE = 1.5;
 
@@ -9,8 +10,10 @@ function ObstacleModel({ type, position }) {
     switch (type) {
         case "bed":
             return <BedModel position={position} />;
-        // case "wardrobe":
-        //   return <WardrobeModel position={position} />;
+        case "couch":
+            return <CouchModel position={position} />;
+        case "wardrobe":
+          return <WardrobeModel position={position} />;
         default:
             return null;
     }

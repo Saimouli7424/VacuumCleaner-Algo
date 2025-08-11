@@ -3,15 +3,15 @@ import { useFrame } from "@react-three/fiber";
 import * as THREE from "three";
 import { useOBJLoader } from "../hooks/useOBJLoader";
 
-export default function BedModel(props) {
-    const obj = useOBJLoader("/models/bed.obj", "/models/bed.mtl");
+export default function WardrobeModel(props) {
+    const obj = useOBJLoader("/models/wardrobe.obj", "/models/wardrobe.mtl");
     const ref = useRef();
 
-    // Base rotations for X, Y, Z
-    const baseRotation = { x: Math.PI/2, y: Math.PI, z: 0 };
+    // Base rotation so wardrobe faces desired direction initially
+    const baseRotation = { x: 0, y: Math.PI / 2, z: 0 };
 
     useEffect(() => {
-        if (ref.current) {
+        if (ref.current && obj) {
             ref.current.rotation.set(baseRotation.x, baseRotation.y, baseRotation.z);
             ref.current.updateMatrixWorld(true);
 
@@ -21,11 +21,18 @@ export default function BedModel(props) {
         }
     }, [obj]);
 
+    useFrame(() => {
+        if (ref.current) {
+            // Continuously rotate horizontally (around Y axis)
+            ref.current.rotation.y += 0.01; // Adjust speed here
+        }
+    });
+
     return obj ? (
         <primitive
             object={obj}
             ref={ref}
-            scale={[0.006, 0.007, 0.008]}
+            scale={[0.7, 0.7, 0.5]}
             {...props}
         />
     ) : null;
