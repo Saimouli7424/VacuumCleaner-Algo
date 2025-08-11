@@ -12,6 +12,9 @@ export default function Controls({
 
     const toggleOpen = () => setOpen((o) => !o);
 
+    // Close menu helper
+    const closeMenu = () => setOpen(false);
+
     return (
         <>
             {/* Hamburger visible only on mobile */}
@@ -22,20 +25,29 @@ export default function Controls({
             {/* Controls panel: add 'open' class when open */}
             <div className={`control-panel ${open ? "open" : ""}`}>
                 <button
-                    onClick={() => setPaintMode("start")}
+                    onClick={() => {
+                        setPaintMode("start");
+                        closeMenu();
+                    }}
                     className={paintMode === "start" ? "active" : ""}
                 >
                     Set Start
                 </button>
                 <button
-                    onClick={() => setPaintMode("dirt")}
+                    onClick={() => {
+                        setPaintMode("dirt");
+                        closeMenu();
+                    }}
                     className={paintMode === "dirt" ? "active" : ""}
                 >
                     Add Dirt
                 </button>
 
                 <button
-                    onClick={() => setPaintMode("obstacle")}
+                    onClick={() => {
+                        setPaintMode("obstacle");
+                        closeMenu();
+                    }}
                     className={paintMode === "obstacle" ? "active" : ""}
                 >
                     Add Obstacle
@@ -45,7 +57,10 @@ export default function Controls({
                     <div className="obstacle-dropdown">
                         <select
                             value={selectedObstacle}
-                            onChange={(e) => setSelectedObstacle(e.target.value)}
+                            onChange={(e) => {
+                                setSelectedObstacle(e.target.value);
+                                closeMenu();
+                            }}
                         >
                             <option value="tv">TV</option>
                             <option value="bed">Bed</option>
@@ -56,8 +71,22 @@ export default function Controls({
                     </div>
                 )}
 
-                <button onClick={clearObstacles}>Clear Obstacles</button>
-                <button onClick={startCleaning}>Start Cleaning</button>
+                <button
+                    onClick={() => {
+                        clearObstacles();
+                        closeMenu();
+                    }}
+                >
+                    Clear Obstacles
+                </button>
+                <button
+                    onClick={() => {
+                        startCleaning();
+                        closeMenu();
+                    }}
+                >
+                    Start Cleaning
+                </button>
             </div>
         </>
     );
