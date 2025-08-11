@@ -19,7 +19,7 @@ export default function WardrobeModel(props) {
             const heightOffset = -box.min.y;
             ref.current.position.y = heightOffset + 0.1;
         }
-    }, [obj]);
+    }, [baseRotation.x, baseRotation.y, baseRotation.z]);
 
     useFrame(() => {
         if (ref.current) {
